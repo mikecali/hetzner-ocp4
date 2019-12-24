@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: reset-hetzner-server
+spec:
+  inputs:
+    resources:
+      - name: hetzner-ocp4
+        type: git
+  steps:
+    - name: 00-provision-hetzner
+      image: quay.io/rbo/sandbox:ubi-ansible
+      imagePullPolicy: Always
+      command:
+        - /usr/bin/bash
+        - -x
+        - -c
+        - |
+          echo "Reset server";
+          cp -v /cluster-yml/cluster.yml hetzner-ocp4/
+          cd hetzner-ocp4/
+          export ANSIBLE_REMOTE_TMP=/tmp
+          ./ansible/00-provision-hetzner.yml --private-key=/ssh-key/ssh-privatekey
+      volumeMounts:
+      - name: ssh-key
+        mountPath: "/ssh-key"
+        readOnly: true
+      - name: cluster-yml
+        mountPath: "/cluster-yml"
+        readOnly: true
+  volumes:
+    - name: ssh-key
+      secret:
+        secretName: hetzner-ssh-key
+    - name: cluster-yml
+      secret:
+        secretName: cluster-basic
