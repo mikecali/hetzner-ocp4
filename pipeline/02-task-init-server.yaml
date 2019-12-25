@@ -16,23 +16,18 @@ spec:
         - -x
         - -c
         - |
-          cp -v /cluster-yml/cluster.yml hetzner-ocp4/
+          cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
           ./pipeline/cluster-yml-to-env.sh
           source cluster.env
-          ssh -i /ssh-key/ssh-privatekey -l root $HETZNER_IP yum install -y ansible git
-          ssh -i /ssh-key/ssh-privatekey -l root $HETZNER_IP git clone -b pipeline https://github.com/rbo/hetzner-ocp4.git
+          ssh -o StrictHostKeyChecking=no -i /secret/ssh-privatekey -l root $HETZNER_IP yum install -y ansible git
+          ssh -o StrictHostKeyChecking=no -i /secret/ssh-privatekey -l root $HETZNER_IP git clone -b $(inputs.resources.hetzner-ocp4.revision) $(inputs.resources.hetzner-ocp4.url) hetzner-ocp4
+          scp -o StrictHostKeyChecking=no -i /secret/ssh-privatekey /secret/cluster.yml root@$HETZNER_IP:~/hetzner-ocp4/cluster.yml
       volumeMounts:
-      - name: ssh-key
-        mountPath: "/ssh-key"
-        readOnly: true
-      - name: cluster-yml
-        mountPath: "/cluster-yml"
+      - name: hetzner-ocp4-pipeline
+        mountPath: "/secret"
         readOnly: true
   volumes:
-    - name: ssh-key
+    - name: hetzner-ocp4-pipeline
       secret:
-        secretName: hetzner-ssh-key
-    - name: cluster-yml
-      secret:
-        secretName: cluster-basic
+        secretName: hetzner-ocp4-pipeline

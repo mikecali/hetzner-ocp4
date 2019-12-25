@@ -1,14 +1,14 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: reset-hetzner-server
+  name: prepare-host
 spec:
   inputs:
     resources:
       - name: hetzner-ocp4
         type: git
   steps:
-    - name: 00-provision-hetzner
+    - name: prepare-host
       image: quay.io/rbo/sandbox:ubi-ansible
       imagePullPolicy: Always
       command:
@@ -16,11 +16,18 @@ spec:
         - -x
         - -c
         - |
-          echo "Reset server";
           cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
-          export ANSIBLE_REMOTE_TMP=/tmp
-          ./ansible/00-provision-hetzner.yml --private-key=/secret/ssh-privatekey
+          ./pipeline/cluster-yml-to-env.sh
+          source cluster.env
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i /secret/ssh-privatekey \
+            -l root \
+            $HETZNER_IP \
+            'cd hetzner-ocp4/ && ./ansible/01-prepare-host.yml'
+            
       volumeMounts:
       - name: hetzner-ocp4-pipeline
         mountPath: "/secret"

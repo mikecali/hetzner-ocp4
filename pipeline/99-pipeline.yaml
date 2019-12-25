@@ -15,8 +15,19 @@ spec:
         - name: hetzner-ocp4
           resource: workspace
     - name: init-server
+      runAfter:
+      - reset-hetzner-server
       taskRef:
         name: init-server
+      resources:
+        inputs:
+        - name: hetzner-ocp4
+          resource: workspace
+    - name: prepare-host
+      runAfter:
+      - init-server
+      taskRef:
+        name: prepare-host
       resources:
         inputs:
         - name: hetzner-ocp4

@@ -8,14 +8,16 @@ podman push quay.io/rbo/sandbox:ubi-ansible
 
 ```
 
-## Create secrets
+## Create secret
 ```
-$ oc create secret generic cluster-basic --from-file=cluster.yml=cluster-ci.yml
-secret/cluster-basic created
-
-$ oc create secret generic hetzner-ssh-key\
-    --from-file=ssh-privatekey=/Users/rbohne/.ssh/pipeline \
-    --type=kubernetes.io/ssh-auth
+oc create secret generic hetzner-ocp4-pipeline\
+  --from-file=ssh-privatekey=/Users/rbohne/.ssh/pipeline \
+  --from-file=gcp_service_account.json=/Users/rbohne/Desktop/rbohne-openshift-ssa-project-1-92c77d04054a.json \
+  --from-file=cluster.yml=pipeline/cluster.yml \
+  --from-file=cluster-test-01.yml=pipeline/cluster-test-01.yml \
+  --from-file=cluster-test-02.yml=pipeline/cluster-test-02.yml   
+  --from-file=cluster-test-02.yml=pipeline/cluster-test-03.yml   
+    
 ```
 
 ## Install pipeline
