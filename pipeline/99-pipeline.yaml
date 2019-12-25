@@ -14,3 +14,10 @@ spec:
         inputs:
         - name: hetzner-ocp4
           resource: workspace
+    - name: init-server
+      taskRef:
+        name: init-server
+      resources:
+        inputs:
+        - name: hetzner-ocp4
+          resource: workspace

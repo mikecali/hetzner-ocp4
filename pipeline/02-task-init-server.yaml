@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: init-server
+spec:
+  inputs:
+    resources:
+      - name: hetzner-ocp4
+        type: git
+  steps:
+    - name: init-server
+      image: quay.io/rbo/sandbox:ubi-ansible
+      imagePullPolicy: Always
+      command:
+        - /usr/bin/bash
+        - -x
+        - -c
+        - |
+          cp -v /cluster-yml/cluster.yml hetzner-ocp4/
+          cd hetzner-ocp4/
+          ./pipeline/cluster-yml-to-env.sh
+          source cluster.env
+          ssh -i /ssh-key/ssh-privatekey -l root $HETZNER_IP yum install -y ansible git
+          ssh -i /ssh-key/ssh-privatekey -l root $HETZNER_IP git clone -b pipeline https://github.com/rbo/hetzner-ocp4.git
+      volumeMounts:
+      - name: ssh-key
+        mountPath: "/ssh-key"
+        readOnly: true
+      - name: cluster-yml
+        mountPath: "/cluster-yml"
+        readOnly: true
+  volumes:
+    - name: ssh-key
+      secret:
+        secretName: hetzner-ssh-key
+    - name: cluster-yml
+      secret:
+        secretName: cluster-basic
