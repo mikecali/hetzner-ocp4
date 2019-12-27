@@ -9,7 +9,7 @@ spec:
         type: git
   steps:
     - name: prepare-host
-      image: quay.io/rbo/sandbox:ubi-ansible
+      image: quay.io/redhat-emea-ssa-team/hetzner-ocp4-pipeline:latest
       imagePullPolicy: Always
       command:
         - /usr/bin/bash
@@ -18,7 +18,7 @@ spec:
         - |
           cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
-          ./pipeline/cluster-yml-to-env.sh
+          /cluster-yml-to-env.sh
           source cluster.env
 
           ssh \

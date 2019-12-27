@@ -9,7 +9,7 @@ spec:
         type: git
   steps:
     - name: 00-provision-hetzner
-      image: quay.io/rbo/sandbox:ubi-ansible
+      image: quay.io/redhat-emea-ssa-team/hetzner-ocp4-pipeline:latest
       imagePullPolicy: Always
       command:
         - /usr/bin/bash
