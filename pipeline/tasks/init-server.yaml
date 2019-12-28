@@ -18,7 +18,7 @@ spec:
         - |
           cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
-          /cluster-yml-to-env.sh
+          /container-scripts/cluster-yml-to-env.sh
           source cluster.env
           ssh -o StrictHostKeyChecking=no -i /secret/ssh-privatekey -l root $HETZNER_IP yum install -y ansible git
           ssh -o StrictHostKeyChecking=no -i /secret/ssh-privatekey -l root $HETZNER_IP git clone -b $(inputs.resources.hetzner-ocp4.revision) $(inputs.resources.hetzner-ocp4.url) hetzner-ocp4

@@ -18,7 +18,7 @@ spec:
         - |
           cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
-          /cluster-yml-to-env.sh
+          /container-scripts/cluster-yml-to-env.sh
           source cluster.env
 
           ssh \
