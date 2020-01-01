@@ -7,6 +7,10 @@ spec:
     resources:
       - name: hetzner-ocp4
         type: git
+    params:
+      - name: cluster-yml-secret
+        type: string
+        default: "hetzner-ocp4-pipeline"
   steps:
     - name: 00-provision-hetzner
       image: quay.io/redhat-emea-ssa-team/hetzner-ocp4-pipeline:latest
@@ -28,4 +32,4 @@ spec:
   volumes:
     - name: hetzner-ocp4-pipeline
       secret:
-        secretName: hetzner-ocp4-pipeline
+        secretName: $(inputs.params.cluster-yml-secret)
