@@ -12,7 +12,14 @@ spec:
         type: string
       - name: cluster-yml
         type: string
+        default: "cluster.yml"
+      - name: cluster-yml-secret
+        type: string
+        default: "hetzner-ocp4-pipeline"
       - name: sync-files
+        type: string
+        default: ""
+      - name: playbook-args
         type: string
         default: ""
   steps:
@@ -49,7 +56,7 @@ spec:
             -i /secret/ssh-privatekey \
             -l root \
             $HETZNER_IP \
-            'cd hetzner-ocp4/ && ./ansible/$(inputs.params.playbook) -e @$(inputs.params.cluster-yml)'
+            'cd hetzner-ocp4/ && ./ansible/$(inputs.params.playbook) -e @$(inputs.params.cluster-yml) $(inputs.params.playbook-args)'
             
       volumeMounts:
       - name: hetzner-ocp4-pipeline
@@ -58,4 +65,4 @@ spec:
   volumes:
     - name: hetzner-ocp4-pipeline
       secret:
-        secretName: hetzner-ocp4-pipeline
+        secretName: $(inputs.params.cluster-yml-secret)
