@@ -11,6 +11,9 @@ spec:
       - name: cluster-yml-secret
         type: string
         default: "hetzner-ocp4-pipeline"
+      - name: cluster-yml
+        type: string
+        default: "cluster.yml"
   steps:
     - name: 00-provision-hetzner
       image: quay.io/redhat-emea-ssa-team/hetzner-ocp4-pipeline:latest
@@ -24,7 +27,12 @@ spec:
           cp -v /secret/cluster.yml hetzner-ocp4/
           cd hetzner-ocp4/
           export ANSIBLE_REMOTE_TMP=/tmp
-          ./ansible/00-provision-hetzner.yml --private-key=/secret/ssh-privatekey
+          ./ansible/00-provision-hetzner.yml \
+            -e @$(inputs.params.cluster-yml) \
+            --private-key=/secret/ssh-privatekey && \
+          /container-scripts/rhel-subscription.yaml \
+            -e @$(inputs.params.cluster-yml) \
+            --private-key=/secret/ssh-privatekey
       volumeMounts:
       - name: hetzner-ocp4-pipeline
         mountPath: "/secret"
