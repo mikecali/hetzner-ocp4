@@ -2,6 +2,19 @@
 
 ## xx
 
+### Add possibility to add new worker nodes (#88)
+
+Run playbook:
+```
+./ansible/add-node.yml
+```
+
+Approve pending csr:
+```
+oc get csr
+oc adm certificate approve csr/csr-jjjcb
+```
+
 ### Added letsencrypt_disabled switch
 
 This allows you to disable letsencrypt setup. (Default is enabled letsencrypt.)
