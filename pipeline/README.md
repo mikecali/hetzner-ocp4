@@ -132,3 +132,21 @@ EOF
 
 oc apply -f pipeline/
 ```
+
+
+
+## lightning talk
+
+* Show pipelines: https://console-openshift-console.apps.demo.openshift.pub/k8s/ns/hetzner-ocp4/tekton.dev~v1alpha1~Pipeline
+
+
+* Parameters don't work via WebUI  -> Works with 4.3 & 0.9.1 Pipelines
+* Missing repo info at pipelineruns
+* Triggers works 
+    https://github.com/tektoncd/triggers#background
+    no auth! 
+    https://github.com/tektoncd/triggers/tree/master/examples
+    oc expose svc/el-listener
+* timeout 
+  https://github.com/tektoncd/pipeline/blob/master/docs/pipelineruns.md#syntax
+
