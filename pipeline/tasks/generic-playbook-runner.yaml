@@ -4,6 +4,7 @@ metadata:
   name: generic-playbook-runner
 spec:
   inputs:
+    timeout: 2h
     resources:
       - name: hetzner-ocp4
         type: git
